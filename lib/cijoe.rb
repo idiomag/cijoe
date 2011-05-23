@@ -29,8 +29,7 @@ class CIJoe
     @user, @project = git_user_and_project
     @url = "http://github.com/#{@user}/#{@project}"
 
-    @campfire = CIJoe::Campfire.new(project_path)
-
+    @campfire = CIJoe::Campfire.new(project_path) if !repo_config.usecampfire.to_s.empty?
     @last_build = nil
     @current_build = nil
 
@@ -79,7 +78,7 @@ class CIJoe
     @current_build = nil
     write_build 'current', @current_build
     write_build 'last', @last_build
-    @campfire.notify(@last_build) if @campfire.valid?
+    @campfire.notify(@last_build) if @campfire && @campfire.valid?
 
     # another build waits
     if !repo_config.buildallfile.to_s.empty? && File.exist?(repo_config.buildallfile.to_s)
@@ -178,14 +177,24 @@ class CIJoe
 
   # massage our repo
   def run_hook(hook)
+    hook_exists = false
     if File.exists?(file=path_in_project(".git/hooks/#{hook}")) && File.executable?(file)
+      hook_exists = true
+    elsif File.exists?(file=File.join(File.dirname(File.expand_path(__FILE__)), "cijoe/hooks/#{hook}")) && File.executable?(file)
+      hook_exists = true
+    end
+    
+    if hook_exists
+      puts "Running hook #{file}"
       data =
         if @last_build && @last_build.commit
           {
             "MESSAGE" => @last_build.commit.message,
             "AUTHOR" => @last_build.commit.author,
             "SHA" => @last_build.commit.sha,
-            "OUTPUT" => @last_build.env_output
+            "OUTPUT" => @last_build.env_output,
+            "PROJECT" => @last_build.project,
+            "BRANCH" => @last_build.branch
           }
         else
           {}

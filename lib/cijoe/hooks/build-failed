@@ -1,0 +1,9 @@
+echo "
+Author:  $AUTHOR
+Project: $PROJECT
+Branch:  $BRANCH
+Message:
+$MESSAGE
+
+$OUTPUT
+" | mail -s "[$PROJECT/$BRANCH] BUILD FAILED $SHA" jsgriffin@gmail.com

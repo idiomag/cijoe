@@ -36,7 +36,7 @@ class CIJoe
       # Only build if we were given an explicit branch via `?branch=blah`
       # or the payload exists and the "ref" property matches our 
       # specified build branch.
-      if params[:branch] || params[:rebuild] || pushed_branch == joe.git_branch
+      if params[:branch] || params[:rebuild]
         joe.build(params[:branch])
       end
 
