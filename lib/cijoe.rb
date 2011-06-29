@@ -114,9 +114,6 @@ class CIJoe
       read.close
       $stdout.reopen write
       exec cmd
-      @current_build.output_status = $?.to_i
-      puts "Finished"
-      puts @current_build.output_status
     end
 
     write.close
@@ -144,8 +141,7 @@ class CIJoe
 
     Process.waitpid(build.pid, 1)
     puts build
-    #status = $?.exitstatus.to_i
-    status = build.output_status
+    status = $?.exitstatus.to_i
     @current_build = build
     puts "#{Time.now.to_i}: Built #{build.short_sha}: status=#{status}"
 
