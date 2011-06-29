@@ -137,11 +137,12 @@ class CIJoe
       build.pid = pid
       write_build 'current', build
       output = pipe.read
+      puts "Finished"
+      status = $?.exitstatus.to_i
     end
 
     Process.waitpid(build.pid, 1)
     puts build
-    status = $?.exitstatus.to_i
     @current_build = build
     puts "#{Time.now.to_i}: Built #{build.short_sha}: status=#{status}"
 
