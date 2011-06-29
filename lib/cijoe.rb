@@ -114,6 +114,9 @@ class CIJoe
       read.close
       $stdout.reopen write
       exec cmd
+      @current_build.output_status = $?.to_i
+      puts "Finished"
+      puts @current_build.output_status
     end
 
     write.close
@@ -132,7 +135,6 @@ class CIJoe
     write_build 'current', build
 
     open_pipe("cd #{@project_path} && #{runner_command} 2>&1") do |pipe, pid|
-      puts "In #{@project_path}"
       puts "#{Time.now.to_i}: Building #{build.branch} at #{build.short_sha} with command #{runner_command}: pid=#{pid}"
 
       build.pid = pid
@@ -141,8 +143,9 @@ class CIJoe
     end
 
     Process.waitpid(build.pid, 1)
-    puts output
-    status = $?.exitstatus.to_i
+    puts build
+    #status = $?.exitstatus.to_i
+    status = build.output_status
     @current_build = build
     puts "#{Time.now.to_i}: Built #{build.short_sha}: status=#{status}"
 
