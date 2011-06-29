@@ -113,8 +113,7 @@ class CIJoe
     pid = fork do
       read.close
       $stdout.reopen write
-      #exec cmd
-      `#{cmd}`
+      exec cmd
     end
 
     write.close
