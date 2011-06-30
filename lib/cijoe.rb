@@ -130,15 +130,21 @@ class CIJoe
     build.branch = git_branch
     write_build 'current', build
 
-    open_pipe("cd #{@project_path} && #{runner_command} 2>&1") do |pipe, pid|
-      puts "#{Time.now.to_i}: Building #{build.branch} at #{build.short_sha} with command #{runner_command}: pid=#{pid}"
+    #open_pipe("cd #{@project_path} && #{runner_command} 2>&1") do |pipe, pid|
+    #  puts "#{Time.now.to_i}: Building #{build.branch} at #{build.short_sha} with command #{runner_command}: pid=#{pid}"
 
-      build.pid = pid
+    #  build.pid = pid
+    #  write_build 'current', build
+    #  output = pipe.read
+    #end
+    
+    IO.popen("cd #{@project_path} ; #{runner_command} 2>&1") do |io|
+      output = io.read
+      build.pid = io.pid
       write_build 'current', build
-      output = pipe.read
     end
 
-    Process.waitpid(build.pid, 1)
+    #Process.waitpid(build.pid, 1)
     puts output
     puts build
     @current_build = build
