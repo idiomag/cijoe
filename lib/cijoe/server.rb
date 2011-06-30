@@ -32,14 +32,18 @@ class CIJoe
       puts params[:payload]
       unless params[:rebuild]
         payload = JSON.parse(params[:payload])
-        pushed_branch = payload["ref"].split('/').last
+        branch = payload["ref"].split('/').last
+      else
+        if params[:branch]
+          branch = params[:branch]
+        end
       end
       
       # Only build if we were given an explicit branch via `?branch=blah`
       # or the payload exists and the "ref" property matches our 
       # specified build branch.
-      if params[:branch] || params[:rebuild]
-        joe.build(params[:branch]) 
+      if branch || params[:rebuild]
+        joe.build(branch) 
       end
 
       redirect request.path
