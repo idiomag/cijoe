@@ -29,7 +29,7 @@ class CIJoe
 
     post '/?' do
       puts "Received build request"
-      puts params
+      puts params[:payload]
       unless params[:rebuild]
         payload = JSON.parse(params[:payload])
         pushed_branch = payload["ref"].split('/').last
