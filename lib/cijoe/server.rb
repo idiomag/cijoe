@@ -28,6 +28,8 @@ class CIJoe
     end
 
     post '/?' do
+      puts "Received build request"
+      puts params
       unless params[:rebuild]
         payload = JSON.parse(params[:payload])
         pushed_branch = payload["ref"].split('/').last
@@ -37,7 +39,7 @@ class CIJoe
       # or the payload exists and the "ref" property matches our 
       # specified build branch.
       if params[:branch] || params[:rebuild]
-        joe.build(params[:branch])
+        joe.build(params[:branch]) 
       end
 
       redirect request.path
