@@ -25,6 +25,7 @@ class CIJoe
 
   def initialize(project_path)
     @project_path = File.expand_path(project_path)
+    @cake_path = "/home/ci/idio-cake/"
 
     @user, @project = git_user_and_project
     @url = "http://github.com/#{@user}/#{@project}"
@@ -169,6 +170,7 @@ class CIJoe
 
   def git_update
     `cd #{@project_path} && git fetch origin && git reset --hard origin/#{git_branch}`
+    `cd #{@cake_path} && git fetch origin && git reset --hard origin/#{git_branch}`
     run_hook "after-reset"
   end
 
