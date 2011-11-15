@@ -194,14 +194,14 @@ class CIJoe
     if hook_exists
       puts "Running hook #{file}"
       data =
-        if @last_build && @last_build.commit
+        if @current_build && @current_build.commit
           {
-            "MESSAGE" => @last_build.commit.message,
-            "AUTHOR" => @last_build.commit.author,
-            "SHA" => @last_build.commit.sha,
-            "OUTPUT" => @last_build.env_output,
-            "PROJECT" => @last_build.project,
-            "BRANCH" => @last_build.branch
+            "MESSAGE" => @current_build.commit.message,
+            "AUTHOR" => @current_build.commit.author,
+            "SHA" => @current_build.commit.sha,
+            "OUTPUT" => @current_build.env_output,
+            "PROJECT" => @current_build.project,
+            "BRANCH" => @current_build.branch
           }
         else
           {}
