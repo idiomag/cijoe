@@ -179,7 +179,7 @@ class CIJoe
   def git_branch
     return @git_branch if @git_branch
     branch = repo_config.branch.to_s
-    @git_branch = branch == '' ? "master" : branch
+    @git_branch = branch == '' ? "development" : branch
   end
 
   # massage our repo
@@ -194,14 +194,14 @@ class CIJoe
     if hook_exists
       puts "Running hook #{file}"
       data =
-        if @current_build && @current_build.commit
+        if @last_build && @last_build.commit
           {
-            "MESSAGE" => @current_build.commit.message,
-            "AUTHOR" => @current_build.commit.author,
-            "SHA" => @current_build.commit.sha,
-            "OUTPUT" => @current_build.env_output,
-            "PROJECT" => @current_build.project,
-            "BRANCH" => @current_build.branch
+            "MESSAGE" => @last_build.commit.message,
+            "AUTHOR" => @last_build.commit.author,
+            "SHA" => @last_build.commit.sha,
+            "OUTPUT" => @last_build.env_output,
+            "PROJECT" => @last_build.project,
+            "BRANCH" => @last_build.branch
           }
         else
           {}
