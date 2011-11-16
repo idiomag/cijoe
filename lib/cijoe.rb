@@ -204,7 +204,9 @@ class CIJoe
             "BRANCH" => @last_build.branch
           }
         else
-          {}
+          {
+            "BRANCH" => git_branch
+          }
         end
 
       ENV.clear
