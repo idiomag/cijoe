@@ -168,8 +168,8 @@ class CIJoe
   end
 
   def git_update
-    `cd #{@project_path} && git fetch origin && git reset --hard origin/#{git_branch}`
-    run_hook "after-reset"
+    output = `cd #{@project_path} && git fetch origin && git reset --hard origin/#{git_branch}`
+    run_hook "after-reset", {"UPDATE_OUTPUT" => output}
   end
 
   def git_user_and_project
@@ -183,7 +183,7 @@ class CIJoe
   end
 
   # massage our repo
-  def run_hook(hook)
+  def run_hook(hook, extra_data={})
     hook_exists = false
     if File.exists?(file=path_in_project(".git/hooks/#{hook}")) && File.executable?(file)
       hook_exists = true
@@ -208,6 +208,8 @@ class CIJoe
             "BRANCH" => git_branch
           }
         end
+      
+      data = data.merge(extra_data)
 
       ENV.clear
       data.each{ |k, v| ENV[k] = v }
