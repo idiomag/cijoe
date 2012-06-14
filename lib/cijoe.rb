@@ -169,7 +169,7 @@ class CIJoe
 
   def git_update
     output = `cd #{@project_path} && git fetch origin && git reset --hard origin/#{git_branch}`
-    run_hook "after-reset", {"UPDATE_OUTPUT" => output}
+    run_hook "after-reset", {"UPDATE_OUTPUT" => output, "PROJECT_PATH" => @project_path, "GIT_BRANCH" => git_branch}
   end
 
   def git_user_and_project
